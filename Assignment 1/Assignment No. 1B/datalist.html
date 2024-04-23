@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Data List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            margin-top: 100px;
+            display: flex;
+            /* align-items: center; */
+            justify-content: center;
+            height: 100vh;
+        }
+
+        h2 {
+            color: #4caf50;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #4caf50;
+            color: white;
+        }
+
+        button {
+            background-color: #f44336;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        button:hover {
+            background-color: #d32f2f;
+        }
+    </style>
+  </head>
+  <body>
+    <div>
+      <button onclick="goBack()">Go Back</button>
+
+      <h2>User Data List</h2>
+
+      <table id="userTable">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="userList">
+          <!-- User data will be dynamically added here -->
+        </tbody>
+      </table>
+    </div>
+    <script>
+      function goBack() {
+        window.history.back();
+      }
+
+      const userList = JSON.parse(localStorage.getItem("userList")) || [];
+
+      function deleteUser(index) {
+        userList.splice(index, 1);
+        localStorage.setItem("userList", JSON.stringify(userList));
+        displayUserList();
+        location.reload(); // Refresh the page after deleting a user
+      }
+
+      function displayUserList() {
+        const userTable = document.getElementById("userTable");
+        userTable.getElementsByTagName("tbody")[0].innerHTML = ""; // Clear the existing table body
+
+        userList.forEach((user, index) => {
+          const row = userTable.insertRow();
+
+          const cellName = row.insertCell(0);
+          cellName.textContent = `${user.firstName} ${user.lastName}`;
+
+          const cellEmail = row.insertCell(1);
+          cellEmail.textContent = user.email;
+
+          const cellAction = row.insertCell(2);
+          const deleteButton = document.createElement("button");
+          deleteButton.textContent = "Delete";
+          deleteButton.onclick = () => deleteUser(index);
+          cellAction.appendChild(deleteButton);
+        });
+      }
+
+      displayUserList();
+    </script>
+  </body>
+</html>
